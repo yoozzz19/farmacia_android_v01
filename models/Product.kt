@@ -1,6 +1,6 @@
-package com.example.farmaciaDrPerez.responses
+package com.example.farmaciaDrPerez.models
 
-data class ProductResponse(
+class Product(
     val id: Int,
     val codigo: String,
     val name : String,
@@ -15,6 +15,5 @@ data class ProductResponse(
     val image : String,
     val category_id : Int,
     val supplier_id : Int
-){
-
+) {
 }
