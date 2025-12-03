@@ -1,6 +1,7 @@
 package com.example.farmaciaDrPerez.apis
 
-import com.example.farmaciaDrPerez.responses.PostProduct
+
+import com.example.farmaciaDrPerez.requests.ProductRequest
 import com.example.farmaciaDrPerez.responses.ProductResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -8,5 +9,5 @@ import retrofit2.http.POST
 interface PharmacyApi {
 
     @POST("api/products/register")
-    suspend fun addProduct(@Body product : PostProduct): ProductResponse
+    suspend fun addProduct(@Body product : ProductRequest): ProductResponse
 }

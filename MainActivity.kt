@@ -11,18 +11,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.farmaciaDrPerez.screens.addProductScreen
 import com.example.farmaciaDrPerez.ui.theme.FarmaciaDrPerezTheme
+import com.example.farmaciaDrPerez.view_models.ProductViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val miViewModel = ProductViewModel()
         setContent {
             FarmaciaDrPerezTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    addProductScreen(
+
+                        modifier = Modifier.padding(innerPadding),miViewModel
                     )
                 }
             }
@@ -30,18 +33,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FarmaciaDrPerezTheme {
-        Greeting("Android")
-    }
-}
