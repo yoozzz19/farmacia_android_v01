@@ -27,7 +27,7 @@ import com.example.farmaciaDrPerez.view_models.ProductViewModel
 
 @Composable
 fun addProductScreen(
-    modifier: androidx.compose.ui.Modifier = androidx.compose.ui.Modifier,
+    modifier: Modifier= Modifier,
     viewModel: ProductViewModel
 )
 {

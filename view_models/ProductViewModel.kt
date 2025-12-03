@@ -46,25 +46,7 @@ class ProductViewModel : ViewModel() {
                 val request : ProductRequest = _uiState.value.toProductRequest()
                 val newProduct: Product = repo.addProducts(request)
 
-                _uiState.update{  currentState->
-                currentState.copy(
-                    productsList = currentState.productsList + newProduct,
-                    codigo = "",
-                    name = "",
-                    presentation = "",
-                    purchase_price = 0.0,
-                    sale_price = 0.0,
-                    stock = 0,
-                    location = "",
-                    min_stock = 0,
-                    max_stock = 0,
-                    description = "",
-                    image = "",
-                    category_id = 0,
-                    supplier_id = 0
 
-                )
-                }
             }catch (e:Exception){
 
             }

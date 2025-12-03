@@ -7,7 +7,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface PharmacyApi {
-
     @POST("api/products/register")
     suspend fun addProduct(@Body product : ProductRequest): ProductResponse
 }
