@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 class ProductViewModel : ViewModel() {
     private val  _uiState = MutableStateFlow(ProductUIState())
     val uiState: StateFlow<ProductUIState> = _uiState.asStateFlow()
-
+    val categoriesList: StateFlow<List<Category>> = MutableStateFlow(emptyList())
+    val suppliersList: StateFlow<List<Supplier>> = MutableStateFlow(emptyList())
     val repo = PharmacyRepository
 
     private fun ProductUIState.toProductRequest(): ProductRequest{
