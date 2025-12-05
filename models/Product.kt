@@ -7,13 +7,11 @@ class Product(
     val presentation: String,
     val purchase_price : Double,
     val sale_price : Double,
-    val stock : Int,
     val location : String,
     val min_stock : Int,
     val max_stock : Int,
     val description : String,
-    val image : String,
     val category_id : Int,
-    val supplier_id : Int
+    val supplier_id: Int
 ) {
 }

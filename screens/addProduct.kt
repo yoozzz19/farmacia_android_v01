@@ -1,34 +1,42 @@
 package com.example.farmaciaDrPerez.screens
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.farmaciaDrPerez.components.header
+import com.example.farmaciaDrPerez.models.Category
+import com.example.farmaciaDrPerez.models.Supplier
 import com.example.farmaciaDrPerez.view_models.ProductViewModel
 
 
@@ -40,6 +48,30 @@ fun addProductScreen(
 {
     val state = viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val categories = viewModel.categoriesList.collectAsState()
+    val suppliers = viewModel.suppliersList.collectAsState()
+
+    var selectedCategory by remember { mutableStateOf<Category?>(null) }
+    var selectedSupplier by remember { mutableStateOf<Supplier?>(null) }
+    LaunchedEffect(Unit) {
+        viewModel.getCategories()
+        viewModel.getSuppliers()
+    }
+    LaunchedEffect(categories.value) {
+
+        if (categories.value.isNotEmpty() && selectedCategory == null) {
+
+            val defaultCategory = categories.value.first()
+            selectedCategory = defaultCategory
+
+            viewModel.onValueCategory(defaultCategory.id)
+        }
+        if (suppliers.value.isNotEmpty() && selectedSupplier == null) {
+            val defaultSupplier = suppliers.value.first()
+            selectedSupplier = defaultSupplier
+            viewModel.onValueSupplier(defaultSupplier.id)
+        }
+    }
 
     val blue = Color(0xFF1D35C4)
     Column(
@@ -52,7 +84,7 @@ fun addProductScreen(
         Column (
             modifier = Modifier
                 .padding(40.dp)
-                .height(450.dp)
+                .weight(1f)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -111,16 +143,23 @@ fun addProductScreen(
                 onValueChange = {viewModel.onValueDescription(it)},
                 shape = RoundedCornerShape(16.dp)
             )
-            OutlinedTextField(
-                label = { Text("ID Categoría") },
-                value=state.value.category_id.toString(),
-                onValueChange = {viewModel.onValueCategory(it)}
+            categoryDropdown(
+                categories=categories.value,
+                selectedCategory = selectedCategory,
+                onCategorySelected = {
+                    selectedCategory=it
+                    viewModel.onValueCategory(it.id)
+                }
             )
-            OutlinedTextField(
-                label = { Text("ID Proveedor") },
-                value=state.value.supplier_id.toString(),
-                onValueChange = {viewModel.onValueSupplier(it)}
+            supplierDropdown(
+                suppliers=suppliers.value,
+                selectedSupplier=selectedSupplier,
+                onSupplierSelected = {
+                    selectedSupplier=it
+                    viewModel.onValueSupplier(it.id)
+                }
             )
+
 
         }
             Button(
@@ -136,8 +175,81 @@ fun addProductScreen(
     }
 }
 
-//@Composable
-//fun DropdownSelector{
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun categoryDropdown(
+    categories : List<Category>,
+    selectedCategory: Category?,
+    onCategorySelected : (Category)-> Unit
+){
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        TextField(
+            value = selectedCategory?.name ?: "Selecciona una categoría",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Categoría") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            modifier = Modifier.menuAnchor().fillMaxWidth()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = { Text(category.name) },
+                    onClick = {
+                        onCategorySelected(category)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun supplierDropdown(
+    suppliers: List<Supplier>,
+    selectedSupplier: Supplier?,
+    onSupplierSelected: (Supplier) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        TextField(
+            value = selectedSupplier?.name ?: "Selecciona un Proveedor",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Proveedor") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            modifier = Modifier.menuAnchor().fillMaxWidth()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            suppliers.forEach { supplier ->
+                DropdownMenuItem(
+                    text = { Text(supplier.name) },
+                    onClick = {
+                        onSupplierSelected(supplier)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
 
 
 

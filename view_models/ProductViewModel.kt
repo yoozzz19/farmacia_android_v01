@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.farmaciaDrPerez.UIState.ProductUIState
 import com.example.farmaciaDrPerez.data.PharmacyRepository
+import com.example.farmaciaDrPerez.models.Category
 import com.example.farmaciaDrPerez.models.Product
+import com.example.farmaciaDrPerez.models.Supplier
 
 import com.example.farmaciaDrPerez.requests.ProductRequest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,9 +20,14 @@ import kotlinx.coroutines.launch
 class ProductViewModel : ViewModel() {
     private val  _uiState = MutableStateFlow(ProductUIState())
     val uiState: StateFlow<ProductUIState> = _uiState.asStateFlow()
-    val categoriesList: StateFlow<List<Category>> = MutableStateFlow(emptyList())
-    val suppliersList: StateFlow<List<Supplier>> = MutableStateFlow(emptyList())
+
+    private val _categoriesList: MutableStateFlow<List<Category>> = MutableStateFlow(emptyList())
+    val categoriesList: StateFlow<List<Category>> = _categoriesList.asStateFlow()
+    private val _suppliersList: MutableStateFlow<List<Supplier>> = MutableStateFlow(emptyList())
+    val suppliersList: StateFlow<List<Supplier>> = _suppliersList.asStateFlow()
+
     val repo = PharmacyRepository
+
 
     private fun ProductUIState.toProductRequest(): ProductRequest{
         return ProductRequest(
@@ -47,8 +54,28 @@ class ProductViewModel : ViewModel() {
                 val request : ProductRequest = _uiState.value.toProductRequest()
                 val newProduct: Product = repo.addProducts(request)
 
-
             }catch (e:Exception){
+
+            }
+        }
+    }
+    fun getCategories(){
+        viewModelScope.launch {
+            try{
+                val categories = repo.getCategories()
+                println("CATEGORIAS RECIBIDAS: ${categories.size}") // Mira esto en el Logcat
+                _categoriesList.value = categories
+            }catch (e: Exception){
+                println("ERROR API: ${e.message}") // Mira si sale error aquí
+            }
+        }
+    }
+    fun getSuppliers(){
+        viewModelScope.launch {
+            try{
+                val suppliers = repo.getSupplier()
+                _suppliersList.value = suppliers
+            }catch(e: Exception){
 
             }
         }
@@ -64,15 +91,11 @@ class ProductViewModel : ViewModel() {
     }
     fun onValuePurchase(purchase:String){
         var Purchase = purchase.toDoubleOrNull()?:0.0
-        _uiState.value = _uiState.value.copy(purchase_price = Purchase)
+        _uiState.update { it.copy(purchase_price = Purchase) }
     }
     fun onValueSale(sale:String){
         var Sale = sale.toDoubleOrNull()?:0.0
-        _uiState.value = _uiState.value.copy(sale_price = Sale)
-    }
-    fun onValueStock(stock:String){
-        var Stock = stock.toIntOrNull()?:0
-        _uiState.value = _uiState.value.copy(stock = Stock)
+        _uiState.update { it.copy(sale_price = Sale) }
     }
     fun onValueLocation(location: String){
         _uiState.value = _uiState.value.copy(location=location)
@@ -80,25 +103,22 @@ class ProductViewModel : ViewModel() {
 
     fun onValueMinStock(minStock:String){
         var MinStock = minStock.toIntOrNull()?:0
-        _uiState.value = _uiState.value.copy(min_stock = MinStock)
+        _uiState.update { it.copy(min_stock = MinStock ) }
     }
     fun onValueMaxStock(maxStock:String){
         var MaxStock = maxStock.toIntOrNull()?:0
-        _uiState.value = _uiState.value.copy(max_stock = MaxStock)
+        _uiState.update { it.copy(max_stock = MaxStock) }
     }
     fun onValueDescription(description: String){
         _uiState.value = _uiState.value.copy(description=description)
     }
-    fun onValueImage(image: String){
-        _uiState.value = _uiState.value.copy(description=image)
+    fun onValueCategory(category: Int){
+
+        _uiState.update { it.copy(category_id = category) }
     }
-    fun onValueCategory(category: String){
-        var Category = category.toIntOrNull()?:0
-        _uiState.value = _uiState.value.copy(category_id = Category)
-    }
-    fun onValueSupplier(supplier: String){
-        var Supplier = supplier.toIntOrNull()?:0
-        _uiState.value = _uiState.value.copy(supplier_id = Supplier)
+    fun onValueSupplier(supplier: Int){
+
+        _uiState.update { it.copy(supplier_id = supplier) }
     }
 
 

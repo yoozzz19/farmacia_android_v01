@@ -1,7 +1,8 @@
 package com.example.farmaciaDrPerez.responses
 
+import com.example.farmaciaDrPerez.models.Category
+
 data class CategoryResponse(
-    val id:Int = 0,
-    val name : String = ""
+    val categories : List<Category> = emptyList()
 ) {
 }

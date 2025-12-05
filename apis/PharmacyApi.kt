@@ -4,6 +4,7 @@ package com.example.farmaciaDrPerez.apis
 import androidx.core.util.Supplier
 import com.example.farmaciaDrPerez.requests.ProductRequest
 import com.example.farmaciaDrPerez.responses.CategoryResponse
+import com.example.farmaciaDrPerez.responses.InventoryResponse
 import com.example.farmaciaDrPerez.responses.ProductResponse
 import com.example.farmaciaDrPerez.responses.SupplierResponse
 import retrofit2.http.Body
@@ -14,9 +15,13 @@ interface PharmacyApi {
     @POST("api/products/register")
     suspend fun addProduct(@Body product : ProductRequest): ProductResponse
 
-    @GET("api/products/suppliers")
+    @GET("api/suppliers")
     suspend fun getSuppliers(): SupplierResponse
 
-    @GET("api/products/category")
+    @GET("api/categories")
     suspend fun getCategory(): CategoryResponse
+
+    @GET("api/inventory/report")
+    suspend fun getInventoryReport(): InventoryResponse
+
 }

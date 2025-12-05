@@ -1,8 +1,9 @@
 package com.example.farmaciaDrPerez.responses
 
+import com.example.farmaciaDrPerez.models.Supplier
+
 data class SupplierResponse (
-    val id: Int = 0,
-    val name: String = ""
+    val suppliers : List<Supplier> = emptyList()
 ){
 
 

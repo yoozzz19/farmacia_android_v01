@@ -1,6 +1,8 @@
 package com.example.farmaciaDrPerez.UIState
 
+import com.example.farmaciaDrPerez.models.Category
 import com.example.farmaciaDrPerez.models.Product
+import com.example.farmaciaDrPerez.models.Supplier
 import com.example.farmaciaDrPerez.responses.ProductResponse
 
 data class ProductUIState (
@@ -17,7 +19,8 @@ data class ProductUIState (
     val image : String = "",
     val category_id : Int = 0,
     val supplier_id : Int = 0,
-    val productsList: List<Product> = emptyList()
+    val productsList: List<Product> = emptyList(),
+
 
 ){
 }

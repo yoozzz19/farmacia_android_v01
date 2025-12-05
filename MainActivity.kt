@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.farmaciaDrPerez.screens.ReportScreen
 import com.example.farmaciaDrPerez.screens.addProductScreen
 import com.example.farmaciaDrPerez.ui.theme.FarmaciaDrPerezTheme
 import com.example.farmaciaDrPerez.view_models.ProductViewModel
@@ -22,9 +23,7 @@ class MainActivity : ComponentActivity() {
 
         val miViewModel = ProductViewModel()
         setContent {
-            addProductScreen(
-                viewModel=miViewModel
-            )
+           ReportScreen()
         }
     }
 }
